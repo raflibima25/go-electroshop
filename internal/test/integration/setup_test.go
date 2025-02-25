@@ -3,9 +3,9 @@ package integration
 
 import (
 	"fmt"
-	"go-fintrack/internal/controller"
-	"go-fintrack/internal/payload/entity"
-	"go-fintrack/internal/service"
+	"go-electroshop/internal/controller"
+	"go-electroshop/internal/payload/entity"
+	"go-electroshop/internal/service"
 	"os"
 	"testing"
 

@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go-fintrack/internal/payload/response"
-	"go-fintrack/internal/utility"
+	"go-electroshop/internal/payload/response"
+	"go-electroshop/internal/utility"
 	"sync"
 	"time"
 

@@ -1,7 +1,7 @@
 package utility
 
 import (
-	"go-fintrack/internal/payload/response"
+	"go-electroshop/internal/payload/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

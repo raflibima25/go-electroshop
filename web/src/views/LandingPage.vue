@@ -9,8 +9,8 @@ import {
   Bars3Icon,
   XMarkIcon 
 } from '@heroicons/vue/24/outline'
-// logo fintrack
-import logoFintrack from '../assets/logo-fintrack-new.webp'
+// logo electroshop
+import logoelectroshop from '../assets/logo-electroshop-new.webp'
 // import blog images
 import aionyHaust from '../assets/blog/blog-avatar/aiony-haust-3TLl_97HNJo-unsplash.webp'
 import ianDooley from '../assets/blog/blog-avatar/ian-dooley-d1UPkiFd04A-unsplash.webp'
@@ -148,8 +148,8 @@ const currentYear = new Date().getFullYear();
         <!-- Logo -->
         <div class="flex lg:flex-1">
           <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">Fintrack</span>
-            <img class="h-10 w-auto" :src=logoFintrack alt="Fintrack Logo" />
+            <span class="sr-only">electroshop</span>
+            <img class="h-10 w-auto" :src=logoelectroshop alt="electroshop Logo" />
           </a>
         </div>
 
@@ -190,8 +190,8 @@ const currentYear = new Date().getFullYear();
         <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex items-center justify-between">
             <a href="#" class="-m-1.5 p-1.5">
-              <span class="sr-only">Fintrack</span>
-              <img class="h-10 w-auto" :src=logoFintrack alt="Fintrack Logo" />
+              <span class="sr-only">electroshop</span>
+              <img class="h-10 w-auto" :src=logoelectroshop alt="electroshop Logo" />
             </a>
             <button 
               type="button" 
@@ -371,7 +371,7 @@ const currentYear = new Date().getFullYear();
       <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
           <div class="space-y-8">
-            <img class="h-7" :src=logoFintrack alt="Fintrack" />
+            <img class="h-7" :src=logoelectroshop alt="electroshop" />
             <p class="text-sm leading-6 text-gray-600">
               Making the world a better place through constructing elegant hierarchies.
             </p>
@@ -431,7 +431,7 @@ const currentYear = new Date().getFullYear();
         </div>
         <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
           <p class="text-xs leading-5 text-gray-500">
-            &copy; <span>{{ currentYear }}</span> Fintrack, Inc. All rights reserved.
+            &copy; <span>{{ currentYear }}</span> electroshop, Inc. All rights reserved.
           </p>
         </div>
       </div>

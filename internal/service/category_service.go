@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"go-fintrack/internal/payload/entity"
-	"go-fintrack/internal/payload/request"
-	"go-fintrack/internal/payload/response"
+	"go-electroshop/internal/payload/entity"
+	"go-electroshop/internal/payload/request"
+	"go-electroshop/internal/payload/response"
 	"strings"
 	"time"
 

@@ -2,9 +2,9 @@ package unit
 
 import (
 	"errors"
-	"go-fintrack/internal/payload/entity"
-	"go-fintrack/internal/service"
-	"go-fintrack/internal/utility"
+	"go-electroshop/internal/payload/entity"
+	"go-electroshop/internal/service"
+	"go-electroshop/internal/utility"
 	"os"
 	"testing"
 	"time"

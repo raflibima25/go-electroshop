@@ -1,4 +1,4 @@
-module go-fintrack
+module go-electroshop
 
 go 1.23.1
 

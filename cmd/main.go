@@ -1,10 +1,10 @@
 package main
 
 import (
-	"go-fintrack/config"
-	"go-fintrack/internal/router"
-	"go-fintrack/internal/utility"
-	"go-fintrack/middleware"
+	"go-electroshop/config"
+	"go-electroshop/internal/router"
+	"go-electroshop/internal/utility"
+	"go-electroshop/middleware"
 	"log"
 	"os"
 

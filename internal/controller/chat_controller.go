@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"go-fintrack/internal/utility"
+	"go-electroshop/internal/utility"
 	"io"
 	"net/http"
 	"regexp"

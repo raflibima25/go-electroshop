@@ -9,7 +9,7 @@ import {
   Tag, 
   BotMessageSquare 
 } from 'lucide-vue-next'
-import logoFintrack from '@/assets/logo-fintrack-new.webp'
+import logoelectroshop from '@/assets/logo-electroshop-new.webp'
 
 const { userName, logout } = useAuth()
 const showMobileMenu = ref(false)
@@ -43,7 +43,7 @@ const handleLogout = async () => {
           <!-- Logo -->
           <div class="flex-shrink-0 flex items-center">
             <router-link to="/" class="text-2xl font-bold italic text-blue-600 font-montserrat">
-              <img class="h-14 w-auto" :src=logoFintrack alt="Fintrack Logo">
+              <img class="h-14 w-auto" :src=logoelectroshop alt="electroshop Logo">
             </router-link>
           </div>
 

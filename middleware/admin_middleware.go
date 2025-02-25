@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"go-fintrack/internal/payload/response"
+	"go-electroshop/internal/payload/response"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"

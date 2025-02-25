@@ -3,8 +3,8 @@ package integration
 import (
 	"bytes"
 	"encoding/json"
-	"go-fintrack/internal/payload/request"
-	"go-fintrack/internal/payload/response"
+	"go-electroshop/internal/payload/request"
+	"go-electroshop/internal/payload/response"
 	"net/http"
 	"net/http/httptest"
 	"testing"

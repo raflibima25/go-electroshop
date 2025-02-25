@@ -1,14 +1,14 @@
 package router
 
 import (
-	"go-fintrack/internal/controller"
-	"go-fintrack/internal/payload/response"
-	"go-fintrack/internal/service"
-	"go-fintrack/middleware"
+	"go-electroshop/internal/controller"
+	"go-electroshop/internal/payload/response"
+	"go-electroshop/internal/service"
+	"go-electroshop/middleware"
 	"net/http"
 	"strings"
 
-	_ "go-fintrack/docs"
+	_ "go-electroshop/docs"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"

@@ -27,7 +27,7 @@ export default {
           <div class="w-full max-w-xl flex items-center justify-end">
             <div class="w-full max-w-md space-y-4">
               <router-link to="/">
-                <img src="../assets/logo-fintrack-new.webp" alt="Fintrack Logo" class="w-24 h-auto mx-auto -mb-20" />
+                <img src="../assets/logo-electroshop-new.webp" alt="electroshop Logo" class="w-24 h-auto mx-auto -mb-20" />
                 <img 
                   :src="illustrationSrc" 
                   alt="Authentication Illustration"
@@ -45,7 +45,7 @@ export default {
             <div class="lg:hidden text-center mb-8">
               <div class="w-full max-w-md space-y-4">
                 <router-link to="/">
-                  <img src="../assets/logo-fintrack-new.webp" alt="Fintrack Logo" class="w-24 h-auto mx-auto -mb-10" />
+                  <img src="../assets/logo-electroshop-new.webp" alt="electroshop Logo" class="w-24 h-auto mx-auto -mb-10" />
                   <img 
                     :src="illustrationSrc" 
                     alt="Authentication Illustration"

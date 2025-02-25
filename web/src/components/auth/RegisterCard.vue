@@ -182,7 +182,7 @@ const register = async () => {
                         'mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
                         formState.errors.email ? 'border-red-300' : 'border-gray-300'
                     ]"
-                    placeholder="member@fintrack.com"
+                    placeholder="member@electroshop.com"
                 />
                 <p v-if="formState.errors.email" class="mt-1 text-sm text-red-600">
                     {{ formState.errors.email }}

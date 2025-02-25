@@ -2,8 +2,8 @@ package unit
 
 import (
 	"database/sql"
-	"go-fintrack/internal/payload/request"
-	"go-fintrack/internal/service"
+	"go-electroshop/internal/payload/request"
+	"go-electroshop/internal/service"
 	"io"
 	"log"
 	"regexp"

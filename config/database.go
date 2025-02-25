@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"go-fintrack/internal/payload/entity"
+	"go-electroshop/internal/payload/entity"
 	"os"
 
 	"github.com/sirupsen/logrus"

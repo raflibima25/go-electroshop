@@ -2,10 +2,10 @@ package controller
 
 import (
 	"fmt"
-	"go-fintrack/internal/payload/request"
-	"go-fintrack/internal/payload/response"
-	"go-fintrack/internal/service"
-	"go-fintrack/internal/utility"
+	"go-electroshop/internal/payload/request"
+	"go-electroshop/internal/payload/response"
+	"go-electroshop/internal/service"
+	"go-electroshop/internal/utility"
 	"net/http"
 	"strconv"
 	"time"

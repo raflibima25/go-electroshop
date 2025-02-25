@@ -2,7 +2,7 @@ package unit
 
 import (
 	"database/sql"
-	"go-fintrack/internal/service"
+	"go-electroshop/internal/service"
 	"io"
 	"log"
 	"testing"
