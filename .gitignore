@@ -1,0 +1,28 @@
+.idea
+.env
+.env.test
+/logs
+
+# Go build artifacts
+/bin/
+/tmp/
+*.exe
+*.out
+*.test
+*.a
+
+# Logs & Debug files
+/logs/
+*.log
+*.trace
+*.prof
+
+# Docker & CI/CD
+docker-compose.override.yml
+.DS_Store
+node_modules/
+
+# Compiled binary
+*.o
+*.so
+*.dll
