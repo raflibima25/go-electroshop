@@ -26,12 +26,31 @@ func AdminOnly() gin.HandlerFunc {
 			if !exists || !isAdmin.(bool) {
 				ctx.JSON(http.StatusForbidden, response.SuccessResponse{
 					ResponseStatus:  false,
-					ResponseMessage: "Access denied: Admin only",
+					ResponseMessage: "Access denied: Admin privileges required",
 					Data:            nil,
 				})
 				ctx.Abort()
 				return
 			}
+
+			adminBool, ok := isAdmin.(bool)
+			if !ok || !adminBool {
+				ctx.JSON(http.StatusForbidden, response.SuccessResponse{
+					ResponseStatus:  false,
+					ResponseMessage: "Access denied: Admin privileges required",
+					Data:            nil,
+				})
+				ctx.Abort()
+				return
+			}
+		} else {
+			ctx.JSON(http.StatusInternalServerError, response.SuccessResponse{
+				ResponseStatus:  false,
+				ResponseMessage: "Invalid claims format",
+				Data:            nil,
+			})
+			ctx.Abort()
+			return
 		}
 
 		ctx.Next()

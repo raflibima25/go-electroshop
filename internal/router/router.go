@@ -33,6 +33,13 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	transactionService := &service.TransactionService{DB: db}
 	transactionController := &controller.TransactionController{TransactionService: transactionService}
 
+	// init product
+	productService := service.NewProductService(db)
+	productController := controller.NewProductController(productService)
+
+	// init admin dashboard controller
+	adminDashboardController := controller.NewAdminDashboardController(productService, userService)
+
 	// swagger enpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -51,7 +58,16 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 		adminRouter := api.Group("/admin")
 		adminRouter.Use(middleware.Authentication(), middleware.AdminOnly())
 		{
-			//	router admin
+
+			// Dashboard stats
+			adminRouter.GET("/dashboard/stats", adminDashboardController.GetDashboardStatsHandler)
+
+			// Product management (admin only)
+			adminRouter.GET("/products", productController.GetProductsHandler)
+			adminRouter.GET("/products/:id", productController.GetProductByIDHandler)
+			adminRouter.POST("/products", productController.CreateProductHandler)
+			adminRouter.PUT("/products/:id", productController.UpdateProductHandler)
+			adminRouter.DELETE("/products/:id", productController.DeleteProductHandler)
 		}
 
 		// auth endpoint
@@ -68,12 +84,29 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 			}
 		}
 
+		// Product endpoint (Public)
+		productRouter := api.Group("/product")
+		{
+			productRouter.GET("", productController.GetProductsHandler)
+			productRouter.GET("/:id", productController.GetProductByIDHandler)
+			productRouter.GET("/categories", productController.GetProductCategoriesHandler)
+		}
+
 		// dashboard endpoint
 		dashboardRouter := api.Group("/dashboard")
 		dashboardRouter.Use(middleware.Authentication())
 		{
 			dashboardRouter.GET("/overview", dashboardController.GetFinancialOverviewHandler)
 			dashboardRouter.GET("/charts", dashboardController.GetDashboardChartsHandler)
+		}
+
+		// Product Management (authenticated)
+		productMgmtRouter := api.Group("/product-management")
+		productMgmtRouter.Use(middleware.Authentication())
+		{
+			productMgmtRouter.POST("", productController.CreateProductHandler)
+			productMgmtRouter.PUT("/:id", productController.UpdateProductHandler)
+			productMgmtRouter.DELETE("/:id", productController.DeleteProductHandler)
 		}
 
 		// transaction endpoint
@@ -120,6 +153,12 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 				ResponseMessage: "Endpoint not found",
 				Data:            nil,
 			})
+			return
+		}
+
+		// Handle admin routes
+		if strings.HasPrefix(ctx.Request.URL.Path, "/admin") {
+			ctx.File("./web/dist/index.html")
 			return
 		}
 

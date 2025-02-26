@@ -13,9 +13,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// @title 			Financial Management Application API
+// @title 			Electro Shop API
 // @version 		1.0
-// @description 	API for Financial Management Application
+// @description 	API for Electro Shop Application
 // @temsOfService 	http://swagger.io/terms/
 
 // @contact.name 	Rafli Bima Pratandra

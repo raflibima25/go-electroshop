@@ -8,13 +8,11 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func Authentication() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.GetHeader("Authorization")
-		logrus.Infof("Auth header: %s", authHeader) // debug
 		if authHeader == "" {
 			ctx.JSON(http.StatusUnauthorized, response.SuccessResponse{
 				ResponseStatus:  false,
@@ -42,6 +40,7 @@ func Authentication() gin.HandlerFunc {
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			ctx.Set("userID", claims["sub"])
 			ctx.Set("username", claims["username"])
+			ctx.Set("claims", claims)
 		}
 
 		ctx.Next()
