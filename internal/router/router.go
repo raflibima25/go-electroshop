@@ -117,7 +117,7 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 
 		// Product Management (authenticated)
 		productMgmtRouter := api.Group("/product-management")
-		productMgmtRouter.Use(middleware.Authentication())
+		productMgmtRouter.Use(middleware.Authentication(), middleware.AdminOnly())
 		{
 			productMgmtRouter.POST("", productController.CreateProductHandler)
 			productMgmtRouter.PUT("/:id", productController.UpdateProductHandler)

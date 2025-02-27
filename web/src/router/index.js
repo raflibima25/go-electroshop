@@ -9,6 +9,7 @@ const PageNotFound = () => import('@/views/PageNotFound.vue')
 const LandingPage = () => import('@/views/LandingPage.vue')
 const UserProductList = () => import('@/views/UserProductList.vue')
 const ShoppingCart = () => import('@/views/ShoppingCart.vue')
+const ChatAssistant = () => import('@/views/ChatAssistant.vue')
 
 const routes = [
   // public routes
@@ -89,6 +90,17 @@ const routes = [
       requiresAuth: true,
       role: 'user',
       title: 'Shopping Cart',
+      layout: 'UserLayout'
+    }
+  },
+  {
+    path: '/user/chat',
+    name: 'ChatAssistant',
+    component: ChatAssistant,
+    meta: {
+      requiresAuth: true,
+      role: 'user',
+      title: 'Chat Assistant',
       layout: 'UserLayout'
     }
   },

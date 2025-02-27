@@ -1,20 +1,18 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuth } from '../composables/useAuth'
-import { cartService } from '@/services/cartService';
 import { 
   Menu as MenuIcon, 
   X, 
   LayoutDashboard, 
   Package,
   ShoppingBag,
-  ShoppingCart,
-  User,
-  LogOut 
+  LogOut,
+  BotMessageSquare 
 } from 'lucide-vue-next'
 import logoelectroshop from '@/assets/logo-electroshop.webp'
 
-const { userName, logout, isAdmin, isAuthenticated } = useAuth()
+const { userName, logout, isAdmin } = useAuth()
 const showMobileMenu = ref(false)
 const showUserMenu = ref(false)
 
@@ -35,16 +33,6 @@ const displayName = computed(() => {
 const handleLogout = async () => {
   await logout()
 }
-
-// Cart items count from localStorage
-const cartItemCount = computed(() => {
-  try {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    return cart.reduce((total, item) => total + item.quantity, 0);
-  } catch (e) {
-    return 0;
-  }
-});
 </script>
 
 <template>
@@ -92,6 +80,15 @@ const cartItemCount = computed(() => {
               >
                 <ShoppingBag class="w-4 h-4 mr-2" />
                 Products
+              </router-link>
+
+              <router-link 
+                to="/user/chat" 
+                class="inline-flex items-center px-1 pt-1 text-sm font-medium"
+                :class="[$route.path === '/user/chat' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700']"
+              >
+                <BotMessageSquare class="w-4 h-4 mr-2" />
+                AI Assistant
               </router-link>
             </template>
           </div>
@@ -183,6 +180,15 @@ const cartItemCount = computed(() => {
           >
             <ShoppingBag class="w-5 h-5 mr-3" />
             Products
+          </router-link>
+
+          <router-link 
+            to="/user/chat" 
+            class="inline-flex items-center px-1 pt-1 text-sm font-medium"
+            :class="[$route.path === '/user/chat' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700']"
+          >
+            <BotMessageSquare class="w-4 h-4 mr-2" />
+            AI Assistant
           </router-link>
         </template>
       </div>

@@ -358,6 +358,8 @@ onMounted(() => {
               
               <div class="mt-3 flex items-center justify-between">
                 <span class="text-xl font-bold text-gray-900">{{ formatCurrency(product.price) }}</span>
+              </div>
+              <div class="mt-4 flex justify-end">
                 <Button 
                   @click="addToCart(product)"
                   class="bg-indigo-600 text-white hover:bg-indigo-500"
