@@ -10,32 +10,6 @@ import {
   ChevronDownIcon
 } from 'lucide-vue-next';
 
-import { 
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/composables/useToast';
@@ -44,12 +18,18 @@ import ProductFormModal from '@/components/ProductFormModal.vue';
 import UserLayout from '@/layouts/UserLayout.vue';
 import { formatCurrency } from '@/utils/formatters';
 
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
 const { showToast } = useToast();
 const products = ref([]);
 const categories = ref([]);
 const isLoading = ref(false);
-const showAddDialog = ref(false);
-const showEditDialog = ref(false);
+const showProductFormModal = ref(false);
 const showDeleteDialog = ref(false);
 const selectedProduct = ref(null);
 const searchQuery = ref('');
@@ -101,6 +81,21 @@ const fetchCategories = async () => {
   }
 };
 
+const openAddModal = () => {
+  selectedProduct.value = null;
+  showProductFormModal.value = true;
+};
+
+const openEditModal = (product) => {
+  selectedProduct.value = product;
+  showProductFormModal.value = true;
+};
+
+const closeProductModal = () => {
+  showProductFormModal.value = false;
+  selectedProduct.value = null;
+};
+
 const handleProductAdded = async (productData) => {
   try {
     let response;
@@ -115,8 +110,7 @@ const handleProductAdded = async (productData) => {
     
     if (response.data.status) {
       showToast(response.data.message || 'Product saved successfully', 'success');
-      showAddDialog.value = false;
-      showEditDialog.value = false;
+      showProductFormModal.value = false;
       selectedProduct.value = null;
       await fetchProducts();
     } else {
@@ -125,11 +119,6 @@ const handleProductAdded = async (productData) => {
   } catch (error) {
     showToast(error.response?.data?.message || 'Error saving product', 'error');
   }
-};
-
-const openEditDialog = (product) => {
-  selectedProduct.value = product;
-  showEditDialog.value = true;
 };
 
 const confirmDelete = (product) => {
@@ -219,24 +208,13 @@ onMounted(() => {
               />
             </div>
             
-            <Dialog :open="showAddDialog" @update:open="(value) => showAddDialog = value">
-              <DialogTrigger asChild>
-                <Button class="bg-gradient-to-r bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/20">
-                  <PlusIcon class="w-4 h-4 mr-2" />
-                  Add Product
-                </Button>
-              </DialogTrigger>
-              <DialogContent class="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Product</DialogTitle>
-                </DialogHeader>
-                <ProductFormModal 
-                  :categories="categories"
-                  @close="showAddDialog = false" 
-                  @submit="handleProductAdded" 
-                />
-              </DialogContent>
-            </Dialog>
+            <Button 
+              @click="openAddModal"
+              class="bg-gradient-to-r bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/20"
+            >
+              <PlusIcon class="w-4 h-4 mr-2" />
+              Add Product
+            </Button>
           </div>
         </div>
       </div>
@@ -360,7 +338,7 @@ onMounted(() => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem @click="openEditDialog(product)">
+                        <DropdownMenuItem @click="openEditModal(product)">
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem 
@@ -431,46 +409,50 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Edit Product Dialog -->
-      <Dialog 
-        :open="showEditDialog"
-        @update:open="(value) => showEditDialog = value"
-      >
-        <DialogContent class="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
-          </DialogHeader>
+      <!-- Product Form Dialog -->
+      <div v-if="showProductFormModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">
+              {{ selectedProduct ? 'Edit Product' : 'Add New Product' }}
+            </h2>
+            <button @click="closeProductModal" class="text-gray-500 hover:text-gray-700">
+              <XIcon class="w-5 h-5" />
+            </button>
+          </div>
+          
           <ProductFormModal 
-            v-if="selectedProduct"
             :product="selectedProduct"
             :categories="categories"
-            :show="showEditDialog"
-            @close="showEditDialog = false"
-            @submit="handleProductAdded"
+            @close="closeProductModal" 
+            @submit="handleProductAdded" 
           />
-        </DialogContent>
-      </Dialog>
+        </div>
+      </div>
 
       <!-- Delete Confirmation Dialog -->
-      <AlertDialog :open="showDeleteDialog" @update:open="(value) => showDeleteDialog = value">
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Product</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this product? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+      <div v-if="showDeleteDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
+          <h3 class="text-lg font-semibold mb-2">Delete Product</h3>
+          <p class="text-gray-600 mb-4">
+            Are you sure you want to delete this product? This action cannot be undone.
+          </p>
+          <div class="flex justify-end gap-3">
+            <Button 
+              variant="outline" 
+              @click="showDeleteDialog = false"
+            >
+              Cancel
+            </Button>
+            <Button 
               class="bg-red-600 text-white hover:bg-red-500"
               @click="handleDelete"
             >
               Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   </UserLayout>
 </template>
