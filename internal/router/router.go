@@ -34,6 +34,9 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	transactionService := &service.TransactionService{DB: db}
 	transactionController := &controller.TransactionController{TransactionService: transactionService}
 
+	// init chat assistant
+	chatAssistant := controller.NewElectroAssistant(db)
+
 	// init product
 	productService := service.NewProductService(db)
 	productController := controller.NewProductController(productService)
@@ -149,7 +152,7 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 		chatRouter := api.Group("/chat")
 		chatRouter.Use(middleware.Authentication())
 		{
-			chatRouter.POST("/stream", controller.StreamChat)
+			chatRouter.POST("/stream", chatAssistant.StreamChatHandler)
 		}
 	}
 
