@@ -30,6 +30,7 @@ func ConnectDB() *gorm.DB {
 		&entity.Category{},
 		&entity.Transaction{},
 		&entity.Product{},
+		&entity.CartItem{},
 	); err != nil {
 		logrus.Fatal("Auto migration failed:", err)
 	}

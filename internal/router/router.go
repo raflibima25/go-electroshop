@@ -3,6 +3,7 @@ package router
 import (
 	"go-electroshop/internal/controller"
 	"go-electroshop/internal/payload/response"
+	"go-electroshop/internal/repository"
 	"go-electroshop/internal/service"
 	"go-electroshop/middleware"
 	"net/http"
@@ -36,6 +37,10 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	// init product
 	productService := service.NewProductService(db)
 	productController := controller.NewProductController(productService)
+
+	// init cart
+	cartRepository := &repository.CartRepository{DB: db}
+	cartController := controller.NewCartController(db, cartRepository)
 
 	// init admin dashboard controller
 	adminDashboardController := controller.NewAdminDashboardController(productService, userService)
@@ -90,6 +95,16 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 			productRouter.GET("", productController.GetProductsHandler)
 			productRouter.GET("/:id", productController.GetProductByIDHandler)
 			productRouter.GET("/categories", productController.GetProductCategoriesHandler)
+		}
+
+		cartRouter := api.Group("/cart")
+		cartRouter.Use(middleware.Authentication())
+		{
+			cartRouter.GET("", cartController.GetCartHandler)
+			cartRouter.POST("", cartController.AddToCartHandler)
+			cartRouter.PUT("/:id", cartController.UpdateCartItemHandler)
+			cartRouter.DELETE("/:id", cartController.RemoveFromCartHandler)
+			cartRouter.DELETE("", cartController.ClearCartHandler)
 		}
 
 		// dashboard endpoint
