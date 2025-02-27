@@ -75,7 +75,7 @@ const handleLogin = async (e) => {
             showToast("Login successful", "success");
 
             // redirect base on role
-            const redirectPath = response.data.data.is_admin ? "/admin-dashboard" : "/dashboard";
+            const redirectPath = response.data.data.is_admin ? "/admin-dashboard" : "/user/products";
             await router.push(redirectPath);
         } else {
             throw new Error(response.data.message || "Login failed. Please try again.");

@@ -31,7 +31,7 @@ export function useGoogleAuth() {
 
         showToast('Successfully logged in with Google', 'success')
 
-        const redirectPath = response.data.data.is_admin ? '/admin/dashboard' : '/dashboard'
+        const redirectPath = response.data.data.is_admin ? '/admin/dashboard' : '/user/products'
         await router.push(redirectPath)
       } else {
         throw new Error(response.data.message || 'Authentication failed')

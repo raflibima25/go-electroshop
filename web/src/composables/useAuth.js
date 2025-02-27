@@ -32,7 +32,7 @@ export function useAuth() {
 
     // cek role
     if (requiredRole && requiredRole !== userRole.value) {
-      router.push(isAdmin.value ? '/admin-dashboard' : '/dashboard')
+      router.push(isAdmin.value ? '/admin-dashboard' : '/user/products')
       return false
     }
 

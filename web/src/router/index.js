@@ -3,13 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Gunakan lazy loading untuk semua komponen
 const Login = () => import('@/views/LoginAuth.vue')
 const Register = () => import('@/views/RegisterAuth.vue')
-const DashboardUser = () => import('@/views/DashboardUser.vue')
 const DashboardAdmin = () => import('@/views/DashboardAdmin.vue')
+const ProductList = () => import('@/views/ProductList.vue')
 const PageNotFound = () => import('@/views/PageNotFound.vue')
-const TransactionList = () => import('@/views/TransactionList.vue')
-const CategoryList = () => import('@/views/CategoryList.vue')
-const ChatAssistant = () => import('@/views/ChatAssistant.vue')
 const LandingPage = () => import('@/views/LandingPage.vue')
+const UserProductList = () => import('@/views/UserProductList.vue')
+const ShoppingCart = () => import('@/views/ShoppingCart.vue')
 
 const routes = [
   // public routes
@@ -17,13 +16,7 @@ const routes = [
     path: '/',
     name: 'LandingPage',
     component: LandingPage,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: PageNotFound,
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, title: 'ElectroShop - Home' }
   },
   {
     path: '/login',
@@ -51,52 +44,8 @@ const routes = [
       requiresAuth: false
     }
   },
-  // user routes
-  {
-    path: '/dashboard',
-    name: 'DashboardUser',
-    component: DashboardUser,
-    meta: {
-      requiresAuth: true,
-      role: 'user',
-      title: 'Dashboard',
-      layout: 'UserLayout'
-    }
-  },
-  {
-    path: '/transactions',
-    name: 'TransactionsUser',
-    component: TransactionList,
-    meta: {
-      requiresAuth: true,
-      role: 'user',
-      title: 'Transactions',
-      layout: 'UserLayout'
-    }
-  },
-  {
-    path: '/categories',
-    name: 'CategoriesUser',
-    component: CategoryList,
-    meta: {
-      requiresAuth: true,
-      role: 'user',
-      title: 'Categories',
-      layout: 'UserLayout'
-    }
-  },
-  {
-    path: '/chat-assistant',
-    name: 'ChatAssistant',
-    component: ChatAssistant,
-    meta: {
-      requiresAuth: true,
-      role: 'user',
-      title: 'Chat Assistant',
-      layout: 'UserLayout'
-    }
-  },
-  // admin routes
+
+  // Admin routes (role admin)
   {
     path: '/admin-dashboard',
     name: 'DashboardAdmin',
@@ -104,8 +53,52 @@ const routes = [
     meta: {
       requiresAuth: true,
       role: 'admin',
-      title: 'Admin Dashboard'
+      title: 'Admin Dashboard',
+      layout: 'UserLayout'
     }
+  },
+  {
+    path: '/products',
+    name: 'ProductList',
+    component: ProductList,
+    meta: {
+      requiresAuth: true,
+      role: 'admin',
+      title: 'Products Management',
+      layout: 'UserLayout'
+    }
+  },
+
+  // User routes (role user)
+  {
+    path: '/user/products',
+    name: 'UserProductList',
+    component: UserProductList,
+    meta: {
+      requiresAuth: true,
+      role: 'user',
+      title: 'Browse Products',
+      layout: 'UserLayout'
+    }
+  },
+  {
+    path: '/user/cart',
+    name: 'ShoppingCart',
+    component: ShoppingCart,
+    meta: {
+      requiresAuth: true,
+      role: 'user',
+      title: 'Shopping Cart',
+      layout: 'UserLayout'
+    }
+  },
+
+  // 404 route - always at the end
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: PageNotFound,
+    meta: { requiresAuth: false }
   }
 ]
 
@@ -126,10 +119,10 @@ const isAuthenticated = () => !!localStorage.getItem('token')
 const isAdmin = () => localStorage.getItem('isAdmin') === 'true'
 const getUserRole = () => (isAdmin() ? 'admin' : 'user')
 
-// Navigation guard yang dioptimalkan
+// Navigation guard
 router.beforeEach(async (to, from, next) => {
   // Update title
-  document.title = `${to.meta.title || 'Financial Tracker'}`
+  document.title = `${to.meta.title || 'ElectroShop'}`
 
   // Jika route memerlukan auth dan user tidak terautentikasi
   if (to.meta.requiresAuth && !isAuthenticated()) {
@@ -146,24 +139,36 @@ router.beforeEach(async (to, from, next) => {
 
     // Mencegah akses ke login/register
     if (to.path === '/login' || to.path === '/register') {
-      next(isAdmin() ? '/admin-dashboard' : '/dashboard')
+      if (userRole === 'admin') {
+        next('/admin-dashboard')
+      } else {
+        next('/user/products')
+      }
       return
     }
 
-    // Validasi role-based access
+    // Validasi role-based access - jika spesifik role diperlukan
     if (to.meta.role && to.meta.role !== userRole) {
-      next(userRole === 'admin' ? '/admin-dashboard' : '/dashboard')
+      if (userRole === 'admin') {
+        next('/admin-dashboard')
+      } else {
+        next('/user/products')
+      }
       return
+    }
+
+    // Redirect user berdasarkan role jika mencoba akses halaman 404
+    if (to.name === 'NotFound') {
+      if (userRole === 'admin') {
+        // Keep this behavior since you may want to preserve the 404
+        // but ensure the "go back home" button redirects correctly
+      } else {
+        // Keep this behavior
+      }
     }
   }
 
   next()
-})
-
-// Error handling untuk route
-router.onError((error) => {
-  console.error('Router error:', error)
-  router.push({ name: 'NotFound' })
 })
 
 export default router

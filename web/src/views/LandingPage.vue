@@ -1,102 +1,119 @@
-<!-- LandingPage.vue -->
 <script setup>
 import { ref } from 'vue'
 import { 
-  PresentationChartBarIcon,
-  CalendarDateRangeIcon,
-  LockClosedIcon,
-  ArrowPathIcon,
+  ShoppingCartIcon,
+  ArchiveBoxIcon, // Pengganti Package
+  CreditCardIcon, // Pengganti CreditCard
+  TruckIcon, // Pengganti Truck
+  DevicePhoneMobileIcon, // Pengganti Smartphone
+  ComputerDesktopIcon, // Pengganti Laptop
+  SpeakerWaveIcon, // Pengganti Headphones
+  PhotoIcon, // Pengganti Camera
+  ClockIcon, // Pengganti Watch
   Bars3Icon,
   XMarkIcon 
 } from '@heroicons/vue/24/outline'
 // logo electroshop
-import logoelectroshop from '../assets/logo-electroshop-new.webp'
-// import blog images
-import aionyHaust from '../assets/blog/blog-avatar/aiony-haust-3TLl_97HNJo-unsplash.webp'
-import ianDooley from '../assets/blog/blog-avatar/ian-dooley-d1UPkiFd04A-unsplash.webp'
-import michaelDam from '../assets/blog/blog-avatar/michael-dam-mEZ3PoFGs_k-unsplash.webp'
-import mihaiMoisa from '../assets/blog/mihai-moisa-Djtc1T38-GY-unsplash.webp'
-import nathanDumlaoA0t from '../assets/blog/nathan-dumlao-A0tNoiSq4mo-unsplash.webp'
-import nathanDumlaoY3A from '../assets/blog/nathan-dumlao-Y3AqmbmtLQI-unsplash.webp'
+import logoelectroshop from '../assets/logo-electroshop.webp'
 
 const mobileMenuOpen = ref(false)
 
 // Navigation data
 const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
+  { name: 'Products', href: '#' },
+  { name: 'Categories', href: '#' },
+  { name: 'Deals', href: '#' },
+  { name: 'Support', href: '#' },
 ]
 
 // Features data
 const features = [
   {
-    name: 'Smart Budgeting',
-    description: 'Track your income and expenses effortlessly with automated categorization and insightful reports.',
-    icon: PresentationChartBarIcon,
+    name: 'Wide Selection',
+    description: 'Browse through thousands of the latest electronic devices and accessories from premium brands.',
+    icon: ArchiveBoxIcon,
   },
   {
-    name: 'Secure Transactions',
-    description: 'Your financial data is encrypted and protected with the latest security standards for peace of mind.',
-    icon: LockClosedIcon,
+    name: 'Secure Payments',
+    description: 'Shop with confidence using our secure payment processing systems with multiple payment options.',
+    icon: CreditCardIcon,
   },
   {
-    name: 'Automated Savings',
-    description: 'Set savings goals and let our system automatically allocate funds to help you achive them faster.',
-    icon: ArrowPathIcon,
+    name: 'Fast Shipping',
+    description: 'Get your electronic products delivered quickly and safely with our reliable shipping partners.',
+    icon: TruckIcon,
   },
   {
-    name: 'Financial Planning',
-    description: 'Plan ahead with expense forecasts, bill reminders, and investment tracking for long-term stability.',
-    icon: CalendarDateRangeIcon,
+    name: 'Technical Support',
+    description: 'Our technical experts are ready to assist you with any questions about your electronic purchases.',
+    icon: SpeakerWaveIcon,
   },
 ]
 
-// Blog data
-const blogs = [
+// Product categories
+const categories = [
   {
-    title: 'Boost your conversion rate',
-    date: 'Jan 16, 2025',
-    author: {
-      name: 'Michael Foster',
-      imageUrl: aionyHaust
-    },
-    imageUrl: mihaiMoisa,
+    name: 'Smartphones',
+    icon: DevicePhoneMobileIcon,
+    description: 'Latest models from Apple, Samsung, Xiaomi and more'
   },
   {
-    title: 'How to use search engine optimization to drive sales',
-    date: 'Feb 10, 2025', 
-    author: {
-      name: 'Lindsay Walton',
-      imageUrl: ianDooley
-    },
-    imageUrl: nathanDumlaoA0t,
+    name: 'Laptops',
+    icon: ComputerDesktopIcon,
+    description: 'Performance laptops for work and gaming'
   },
   {
-    title: 'Improve your customer experience',
-    date: 'Feb 12, 2025',
-    author: {
-      name: 'Tom Cook',
-      imageUrl: michaelDam
-    },
-    imageUrl: nathanDumlaoY3A,
+    name: 'Audio Devices',
+    icon: SpeakerWaveIcon,
+    description: 'Premium headphones, earbuds and speakers'
+  },
+  {
+    name: 'Cameras',
+    icon: PhotoIcon,
+    description: 'DSLR, mirrorless and action cameras'
+  },
+  {
+    name: 'Smartwatches',
+    icon: ClockIcon,
+    description: 'Fitness trackers and smartwatches'
+  }
+]
+
+// Featured products
+const featuredProducts = [
+  {
+    name: 'iPhone 13 Pro',
+    price: 12000000,
+    category: 'Smartphone',
+    image: 'https://placehold.co/300x300/e2e8f0/1e293b?text=iPhone+13+Pro'
+  },
+  {
+    name: 'Samsung Galaxy Z Flip',
+    price: 20000000,
+    category: 'Smartphone',
+    image: 'https://placehold.co/300x300/e2e8f0/1e293b?text=Samsung+Z+Flip'
+  },
+  {
+    name: 'Xiaomi Redmi Note 11 Pro',
+    price: 3200000,
+    category: 'Smartphone',
+    image: 'https://placehold.co/300x300/e2e8f0/1e293b?text=Xiaomi+Redmi'
   }
 ]
 
 // Footer navigation
 const footerNavigation = {
-  solutions: [
-    { name: 'Marketing', href: '#' },
-    { name: 'Analytics', href: '#' },
-    { name: 'Commerce', href: '#' },
-    { name: 'Insights', href: '#' },
+  products: [
+    { name: 'Smartphones', href: '#' },
+    { name: 'Laptops', href: '#' },
+    { name: 'Audio', href: '#' },
+    { name: 'Accessories', href: '#' },
   ],
   support: [
     { name: 'Pricing', href: '#' },
     { name: 'Documentation', href: '#' },
     { name: 'Guides', href: '#' },
-    { name: 'API Status', href: '#' },
+    { name: 'Warranty', href: '#' },
   ],
   company: [
     { name: 'About', href: '#' },
@@ -115,29 +132,38 @@ const footerNavigation = {
 // FAQ data
 const faqs = [
   {
-    question: "What is financial management?",
-    answer: "Financial management refers to the strategic planning, organizing, directing, and controlling of financial resources to achieve financial goals efficiently."
+    question: "Do you offer international shipping?",
+    answer: "Yes, we ship to most countries worldwide. Shipping rates and delivery times vary based on your location."
   },
   {
-    question: "Why is budgeting important?",
-    answer: "Budgeting helps track income and expenses, ensuring you live within your means, save for the future, and avoid unnecessary debt."
+    question: "What is your return policy?",
+    answer: "We offer a 30-day return policy for most products. Items must be returned in original packaging with all accessories."
   },
   {
-    question: "How can I improve my financial health?",
-    answer: "You can improve your financial health by creating a budget, saving regularly, managing debt wisely, and investing for long-term growth."
+    question: "Are all products covered by warranty?",
+    answer: "Yes, all our products come with the manufacturer's warranty. Additional extended warranty options are available for purchase."
   },
   {
-    question: "What are the benefits of automated savings?",
-    answer: "Automated savings help you consistently set aside money for emergencies, retirement, and financial goals without having to think about it."
+    question: "Do you offer technical support for products?",
+    answer: "Yes, our technical support team is available to help you with setup, troubleshooting, and usage questions."
   },
   {
-    question: "Is my financial data secure?",
-    answer: "Yes, our platform uses advanced encryption and security protocols to ensure your financial data is safe and protected."
+    question: "How can I track my order?",
+    answer: "Once your order ships, you'll receive a tracking number via email that you can use to monitor your delivery status."
   }
 ];
 
 // Get the current year
 const currentYear = new Date().getFullYear();
+
+// Format price as currency
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  }).format(price);
+}
 </script>
 
 <template>
@@ -148,8 +174,8 @@ const currentYear = new Date().getFullYear();
         <!-- Logo -->
         <div class="flex lg:flex-1">
           <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">electroshop</span>
-            <img class="h-10 w-auto" :src=logoelectroshop alt="electroshop Logo" />
+            <span class="sr-only">ElectroShop</span>
+            <img class="h-10 w-auto" :src="logoelectroshop" alt="ElectroShop Logo" />
           </a>
         </div>
 
@@ -179,7 +205,7 @@ const currentYear = new Date().getFullYear();
         <!-- Desktop login button -->
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
           <a href="/login" class="text-sm font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">→</span>
+            Login <span aria-hidden="true">→</span>
           </a>
         </div>
       </nav>
@@ -190,8 +216,8 @@ const currentYear = new Date().getFullYear();
         <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div class="flex items-center justify-between">
             <a href="#" class="-m-1.5 p-1.5">
-              <span class="sr-only">electroshop</span>
-              <img class="h-10 w-auto" :src=logoelectroshop alt="electroshop Logo" />
+              <span class="sr-only">ElectroShop</span>
+              <img class="h-10 w-auto" :src="logoelectroshop" alt="ElectroShop Logo" />
             </a>
             <button 
               type="button" 
@@ -215,7 +241,7 @@ const currentYear = new Date().getFullYear();
               </div>
               <div class="py-6">
                 <a href="/login" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                  Log in
+                  Login
                 </a>
               </div>
             </div>
@@ -236,14 +262,14 @@ const currentYear = new Date().getFullYear();
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-2xl text-center">
             <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Manage your finances smartly
+              Premium Electronics at Your Fingertips
             </h1>
             <p class="mt-6 text-lg leading-8 text-gray-600">
-              Manage your expenses, increase your savings, and achieve your financial goals with ease. Safe, efficient and practical financial solutions for a more peaceful life.
+              Discover the latest smartphones, laptops, and electronic accessories with exceptional quality and competitive prices.
             </p>
             <div class="mt-10 flex items-center justify-center gap-x-6">
               <a href="/login" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Get started
+                Get Started
               </a>
               <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
                 Learn more <span aria-hidden="true">→</span>
@@ -257,12 +283,12 @@ const currentYear = new Date().getFullYear();
     <!-- Features section -->
     <div class="mx-auto max-w-7xl px-6 sm:mt-24 lg:px-8">
       <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-base font-semibold leading-7 text-indigo-600">Tool faster</h2>
+        <h2 class="text-base font-semibold leading-7 text-indigo-600">Why Choose Us</h2>
         <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Everything you need to manage your finances with ease
+          Everything you need for your electronics shopping
         </p>
         <p class="mt-6 text-lg leading-8 text-gray-600">
-          Take control of your financial future with powerful tools designed to help you budget, save, and invest wisely.
+          We offer a seamless shopping experience with the best selection of electronic products and exceptional customer service.
         </p>
       </div>
       <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
@@ -280,48 +306,61 @@ const currentYear = new Date().getFullYear();
       </div>
     </div>
 
-    <!-- Blog section -->
-    <div class="py-24 sm:pt-48">
+    <!-- Product Categories section -->
+    <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-base font-semibold leading-7 text-indigo-600">Explore</h2>
+        <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Product Categories
+        </p>
+        <p class="mt-6 text-lg leading-8 text-gray-600">
+          Browse our wide range of electronic products across various categories
+        </p>
+      </div>
+
+      <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-5">
+        <div v-for="category in categories" :key="category.name" class="group relative">
+          <div class="aspect-square overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+            <component :is="category.icon" class="h-20 w-20 text-indigo-600 group-hover:text-indigo-500 transition-colors" />
+          </div>
+          <h3 class="mt-6 text-lg font-semibold leading-8 tracking-tight text-gray-900">{{ category.name }}</h3>
+          <p class="text-base leading-7 text-gray-600">{{ category.description }}</p>
+          <a href="#" class="mt-4 text-sm font-medium text-indigo-600 group-hover:text-indigo-500">
+            View products <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="bg-gray-50 py-24 sm:py-32">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-4xl text-center">
-          <h2 class="text-base font-semibold leading-7 text-indigo-600">Blog</h2>
-          <p class="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-            From the blog
-          </p>
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-base font-semibold leading-7 text-indigo-600">Featured Products</h2>
+          <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our Best Sellers</p>
           <p class="mt-6 text-lg leading-8 text-gray-600">
-            Learn how to grow your business with our expert advice.
+            Check out our most popular electronic devices loved by our customers
           </p>
         </div>
 
-        <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          <article v-for="post in blogs" :key="post.title" class="flex flex-col items-start relative isolate overflow-hidden rounded-2xl h-[400px]">
-            <!-- Background image -->
-            <img
-              :src="post.imageUrl"
-              :alt="post.title"
-              class="absolute inset-0 h-full w-full object-cover"
-            />
-            <!-- Gradient overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/75 to-gray-900/0"></div>
-            
-            <div class="relative p-8 flex flex-col h-full justify-end">
-              <!-- Date and author -->
-              <div class="flex items-center gap-x-4 text-sm leading-6 text-white">
-                <time :datetime="post.date">{{ post.date }}</time>
-                <div class="flex items-center gap-x-2">
-                  <img :src="post.author.imageUrl" :alt="post.author.name" class="h-6 w-6 rounded-full bg-white/10" />
-                  <span>{{ post.author.name }}</span>
-                </div>
-              </div>
-              <!-- Title -->
-              <h3 class="mt-3 text-lg font-semibold leading-6 text-white">
-                <a href="#">
-                  <span class="absolute inset-0"></span>
-                  {{ post.title }}
-                </a>
-              </h3>
+        <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+          <div v-for="product in featuredProducts" :key="product.name" class="flex flex-col overflow-hidden rounded-lg shadow-lg bg-white">
+            <div class="flex-shrink-0">
+              <img class="h-96 w-full object-cover" :src="product.image" :alt="product.name">
             </div>
-          </article>
+            <div class="flex flex-1 flex-col justify-between p-6">
+              <div class="flex-1">
+                <p class="text-sm font-medium text-indigo-600">{{ product.category }}</p>
+                <h3 class="mt-2 text-xl font-semibold text-gray-900">{{ product.name }}</h3>
+                <p class="mt-4 text-2xl font-bold text-gray-900">{{ formatPrice(product.price) }}</p>
+              </div>
+              <div class="mt-6">
+                <button type="button" class="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -349,14 +388,14 @@ const currentYear = new Date().getFullYear();
       </div>
       <div class="mx-auto max-w-2xl text-center">
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Take Control of Your Finances.<br>Start Managing Smarter Today.
+          Access the Admin Dashboard.<br>Manage Your Electronic Store.
         </h2>
         <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600">
-          Simplify your financial management, track expenses, set budgets, and achieve your financial goals effortlessly.
+          Log in to the admin portal to manage products, view analytics, and control all aspects of your electronic store.
         </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
           <a href="/login" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            Get started
+            Login
           </a>
           <a href="#" class="text-sm font-semibold leading-6 text-gray-900">
             Learn more <span aria-hidden="true">→</span>
@@ -371,23 +410,17 @@ const currentYear = new Date().getFullYear();
       <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
           <div class="space-y-8">
-            <img class="h-7" :src=logoelectroshop alt="electroshop" />
+            <img class="h-7" :src="logoelectroshop" alt="ElectroShop" />
             <p class="text-sm leading-6 text-gray-600">
-              Making the world a better place through constructing elegant hierarchies.
+              Your premier destination for quality electronics and tech accessories.
             </p>
-            <div class="flex space-x-6">
-              <a v-for="item in footerNavigation.social" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-500">
-                <span class="sr-only">{{ item.name }}</span>
-                <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
-              </a>
-            </div>
           </div>
           <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div class="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 class="text-sm font-semibold leading-6 text-gray-900">Solutions</h3>
+                <h3 class="text-sm font-semibold leading-6 text-gray-900">Products</h3>
                 <ul role="list" class="mt-6 space-y-4">
-                  <li v-for="item in footerNavigation.solutions" :key="item.name">
+                  <li v-for="item in footerNavigation.products" :key="item.name">
                     <a :href="item.href" class="text-sm leading-6 text-gray-600 hover:text-gray-900">
                       {{ item.name }}
                     </a>
@@ -431,11 +464,10 @@ const currentYear = new Date().getFullYear();
         </div>
         <div class="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
           <p class="text-xs leading-5 text-gray-500">
-            &copy; <span>{{ currentYear }}</span> electroshop, Inc. All rights reserved.
+            &copy; <span>{{ currentYear }}</span> ElectroShop, Inc. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
-
   </div>
 </template>
