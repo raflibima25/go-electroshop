@@ -2,12 +2,13 @@
 import { ref, reactive } from "vue";
 import { useRouter } from 'vue-router';
 import { useToast } from "@/composables/useToast";
-import apiClient from "@/utils/api";
 import { EyeIcon, EyeOffIcon } from "lucide-vue-next";
 import GoogleAuthButton from "./GoogleAuthButton.vue";
+import { useAuth } from '@/composables/useAuth';
 
 const router = useRouter();
 const { showToast } = useToast();
+const { login } = useAuth();
 
 const formState = reactive({
     identifier: '',
@@ -61,45 +62,25 @@ const handleLogin = async (e) => {
     formState.errors.general = '';
 
     try {
-        const response = await apiClient.post('/auth/login', {
+        const result = await login({
             email_or_username: formState.identifier.trim(),
             password: formState.password
         });
 
-        console.log('Login response:', response.data); // Untuk debugging
-
-        if (response.data.status) {
-            localStorage.setItem("token", response.data.data.access_token);
-            localStorage.setItem("isAdmin", response.data.data.is_admin);
-            
+        if (result.success) {
             showToast("Login successful", "success");
 
-            // redirect base on role
-            const redirectPath = response.data.data.is_admin ? "/admin-dashboard" : "/user/products";
+            // redirect berdasarkan role
+            const redirectPath = result.data.is_admin ? "/admin-dashboard" : "/user/products";
             await router.push(redirectPath);
         } else {
-            throw new Error(response.data.message || "Login failed. Please try again.");
+            throw new Error(result.message || "Login failed. Please try again.");
         }
     } catch (error) {
-        console.error('Login error:', error); // Untuk debugging
+        console.error('Login error:', error);
 
-        let errorMessage = "An unexpected error occurred";
-        
-        if (error.response) {
-            errorMessage = error.response.data.message || "Login failed. Please try again.";
-            if (error.response.status === 401) {
-                errorMessage = "Invalid email/username or password";
-            } else if (error.response.status === 400) {
-                errorMessage = error.response.data.message || "Invalid input";
-            }
-        } else if (error.request) {
-            errorMessage = "Network error. Please check your connection";
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
-
-        formState.errors.general = errorMessage;
-        showToast(errorMessage, "error");
+        formState.errors.general = error.message || "An unexpected error occurred";
+        showToast(formState.errors.general, "error");
     } finally {
         formState.isLoading = false;
     }

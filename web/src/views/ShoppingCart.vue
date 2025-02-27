@@ -3,6 +3,8 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from '@/composables/useToast';
 import UserLayout from '@/layouts/UserLayout.vue';
+import { cartService } from '@/services/cartService';
+import { useAuth } from '@/composables/useAuth';
 import { formatCurrency } from '@/utils/formatters';
 import { Button } from '@/components/ui/button';
 import { 
@@ -15,18 +17,46 @@ import {
 
 const router = useRouter();
 const { showToast } = useToast();
+const { isAuthenticated } = useAuth();
 const cart = ref([]);
+const isLoading = ref(false);
 const isProcessing = ref(false);
 
 const cartTotal = computed(() => {
-  return cart.value.reduce((total, item) => total + (item.price * item.quantity), 0);
+  return cart.value.reduce((total, item) => {
+    const price = item.product?.price || item.price || 0;
+    return total + (price * item.quantity);
+  }, 0);
 });
 
 const cartItemCount = computed(() => {
   return cart.value.reduce((total, item) => total + item.quantity, 0);
 });
 
-const loadCart = () => {
+const loadCart = async () => {
+  isLoading.value = true;
+  try {
+    if (isAuthenticated.value) {
+      // Load dari API
+      const response = await cartService.getUserCart();
+      if (response.data.status) {
+        cart.value = response.data.data.items;
+      }
+    } else {
+      // Load dari localStorage
+      loadCartFromLocalStorage();
+    }
+  } catch (error) {
+    showToast('Error loading cart', 'error');
+    console.error('Error loading cart:', error);
+    // Fallback ke localStorage jika API error
+    loadCartFromLocalStorage();
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const loadCartFromLocalStorage = () => {
   const savedCart = localStorage.getItem('cart');
   if (savedCart) {
     try {
@@ -42,30 +72,109 @@ const saveCart = () => {
   localStorage.setItem('cart', JSON.stringify(cart.value));
 };
 
-const increaseQuantity = (item) => {
-  item.quantity++;
-  saveCart();
-};
-
-const decreaseQuantity = (item) => {
-  if (item.quantity > 1) {
-    item.quantity--;
-    saveCart();
+// Fungsi untuk menambah jumlah item
+const increaseQuantity = async (item) => {
+  if (isAuthenticated.value) {
+    try {
+      await cartService.updateCartItem(item.id, item.quantity + 1);
+      await loadCart(); // Reload cart dari API
+    } catch (error) {
+      showToast('Error updating cart', 'error');
+    }
+  } else {
+    item.quantity++;
+    saveCartToLocalStorage();
   }
 };
 
-const removeItem = (index) => {
-  cart.value.splice(index, 1);
-  saveCart();
-  showToast('Item removed from cart', 'success');
+// Fungsi untuk mengurangi jumlah item
+const decreaseQuantity = async (item) => {
+  if (item.quantity <= 1) return;
+  
+  if (isAuthenticated.value) {
+    try {
+      await cartService.updateCartItem(item.id, item.quantity - 1);
+      await loadCart(); // Reload cart dari API
+    } catch (error) {
+      showToast('Error updating cart', 'error');
+    }
+  } else {
+    item.quantity--;
+    saveCartToLocalStorage();
+  }
 };
 
-const clearCart = () => {
-  cart.value = [];
-  saveCart();
-  showToast('Cart cleared', 'success');
+// Fungsi untuk menghapus item
+const removeItem = async (item, index) => {
+  if (isAuthenticated.value) {
+    try {
+      // Pastikan item.id ada dan bukan undefined
+      if (!item.id) {
+        showToast('Cannot remove item: Invalid item ID', 'error');
+        return;
+      }
+      
+      await cartService.removeCartItem(item.id);
+      await loadCart(); // Reload cart dari API
+      showToast('Item removed from cart', 'success');
+    } catch (error) {
+      console.error('Error removing item:', error);
+      showToast('Error removing item from cart', 'error');
+    }
+  } else {
+    cart.value.splice(index, 1);
+    saveCartToLocalStorage();
+    showToast('Item removed from cart', 'success');
+  }
 };
 
+// Fungsi untuk mengosongkan cart
+const clearCart = async () => {
+  if (isAuthenticated.value) {
+    try {
+      await cartService.clearCart();
+      await loadCart(); // Reload cart dari API
+      showToast('Cart cleared', 'success');
+    } catch (error) {
+      showToast('Error clearing cart', 'error');
+    }
+  } else {
+    cart.value = [];
+    saveCartToLocalStorage();
+    showToast('Cart cleared', 'success');
+  }
+};
+
+// Simpan cart ke localStorage untuk user yang tidak login
+const saveCartToLocalStorage = () => {
+  localStorage.setItem('cart', JSON.stringify(cart.value));
+};
+
+// Sinkronisasi cart localStorage ke server setelah login
+const syncCartWithServer = async () => {
+  if (!isAuthenticated.value) return;
+  
+  // Ambil cart dari localStorage
+  const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+  if (!localCart.length) return;
+  
+  // Tambahkan semua item ke cart server
+  for (const item of localCart) {
+    try {
+      await cartService.addToCart(item.id, item.quantity);
+    } catch (error) {
+      console.error('Error syncing cart item to server:', error);
+    }
+  }
+  
+  // Kosongkan localStorage cart setelah sync
+  localStorage.removeItem('cart');
+  
+  // Reload cart dari server
+  await loadCart();
+};
+
+// Proses checkout
 const checkout = async () => {
   if (cart.value.length === 0) {
     showToast('Your cart is empty', 'error');
@@ -74,16 +183,20 @@ const checkout = async () => {
   
   isProcessing.value = true;
   
-  // Simulate checkout process
   try {
-    // This would normally be an API call to your backend
+    // Dummy checkout process
     await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    if (isAuthenticated.value) {
+      await cartService.clearCart();
+    } else {
+      localStorage.removeItem('cart');
+    }
     
     showToast('Order placed successfully', 'success');
     cart.value = [];
-    saveCart();
     
-    // Redirect to success page or back to products
+    // Redirect ke success page
     setTimeout(() => {
       router.push('/user/products');
     }, 1000);
@@ -96,6 +209,11 @@ const checkout = async () => {
 
 onMounted(() => {
   loadCart();
+  
+  // Sinkronisasi cart jika user baru login
+  if (isAuthenticated.value) {
+    syncCartWithServer();
+  }
 });
 </script>
 
@@ -107,7 +225,11 @@ onMounted(() => {
         <p class="text-gray-500 mt-1">Review and manage your selected items</p>
       </div>
       
-      <div v-if="cart.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+      <div v-if="isLoading" class="flex justify-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+      
+      <div v-else-if="cart.length === 0" class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
         <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
           <ShoppingBagIcon class="w-10 h-10 text-gray-400" />
         </div>
@@ -144,16 +266,16 @@ onMounted(() => {
               >
                 <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                   <img 
-                    :src="item.thumbnail || '/assets/placeholder.jpg'" 
-                    :alt="item.name"
+                    :src="item.product?.thumbnail || item.thumbnail || '/assets/placeholder.jpg'" 
+                    :alt="item.product?.name || item.name || 'Product'"
                     class="h-full w-full object-cover object-center"
                   />
                 </div>
                 
                 <div class="ml-4 flex-1">
-                  <h3 class="text-base font-medium text-gray-900">{{ item.name }}</h3>
-                  <p class="mt-1 text-sm text-gray-500">{{ item.category }}</p>
-                  <p class="mt-1 text-sm font-medium text-gray-900">{{ formatCurrency(item.price) }}</p>
+                  <h3 class="text-base font-medium text-gray-900">{{ item.product?.name || item.name || 'Unknown Product' }}</h3>
+                  <p class="mt-1 text-sm text-gray-500">{{ item.product?.category || item.category || 'No Category' }}</p>
+                  <p class="mt-1 text-sm font-medium text-gray-900">{{ formatCurrency(item.product?.price || item.price || 0) }}</p>
                 </div>
                 
                 <div class="flex items-center">
@@ -174,7 +296,7 @@ onMounted(() => {
                   </div>
                   
                   <button 
-                    @click="removeItem(index)"
+                    @click="removeItem(item, index)"
                     class="ml-4 text-red-500 hover:text-red-700"
                   >
                     <Trash2Icon class="w-5 h-5" />

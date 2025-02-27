@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useAuth } from '../composables/useAuth'
+import { cartService } from '@/services/cartService';
 import { 
   Menu as MenuIcon, 
   X, 
@@ -13,7 +14,7 @@ import {
 } from 'lucide-vue-next'
 import logoelectroshop from '@/assets/logo-electroshop.webp'
 
-const { userName, logout, isAdmin } = useAuth()
+const { userName, logout, isAdmin, isAuthenticated } = useAuth()
 const showMobileMenu = ref(false)
 const showUserMenu = ref(false)
 
@@ -91,21 +92,6 @@ const cartItemCount = computed(() => {
               >
                 <ShoppingBag class="w-4 h-4 mr-2" />
                 Products
-              </router-link>
-
-              <router-link 
-                to="/user/cart" 
-                class="inline-flex items-center px-1 pt-1 text-sm font-medium relative"
-                :class="[$route.path === '/user/cart' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700']"
-              >
-                <ShoppingCart class="w-4 h-4 mr-2" />
-                <span>Cart</span>
-                <span 
-                  v-if="cartItemCount > 0" 
-                  class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
-                >
-                  {{ cartItemCount }}
-                </span>
               </router-link>
             </template>
           </div>
@@ -197,21 +183,6 @@ const cartItemCount = computed(() => {
           >
             <ShoppingBag class="w-5 h-5 mr-3" />
             Products
-          </router-link>
-
-          <router-link
-            to="/user/cart"
-            class="flex items-center px-3 py-2 text-base font-medium relative"
-            :class="[$route.path === '/user/cart' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:bg-gray-50']"
-          >
-            <ShoppingCart class="w-5 h-5 mr-3" />
-            <span>Cart</span>
-            <span 
-              v-if="cartItemCount > 0" 
-              class="ml-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-            >
-              {{ cartItemCount }}
-            </span>
           </router-link>
         </template>
       </div>

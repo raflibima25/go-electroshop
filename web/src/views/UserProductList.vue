@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import { 
   SearchIcon,
   FilterIcon,
@@ -16,6 +16,8 @@ import { productService } from '@/services/productService';
 import UserLayout from '@/layouts/UserLayout.vue';
 import { formatCurrency } from '@/utils/formatters';
 import { useRouter } from 'vue-router';
+import { cartService } from '@/services/cartService';
+import { useAuth } from '@/composables/useAuth';
 
 const router = useRouter();
 const { showToast } = useToast();
@@ -25,6 +27,7 @@ const isLoading = ref(false);
 const searchQuery = ref('');
 const isFilterExpanded = ref(false);
 const cart = ref([]);
+const { isAuthenticated } = useAuth();
 
 const pagination = ref({
   current_page: 1,
@@ -96,23 +99,59 @@ const resetFilters = () => {
   fetchProducts();
 };
 
-const addToCart = (product) => {
-  // Check if product is already in cart
-  const existingItem = cart.value.find(item => item.id === product.id);
-  
-  if (existingItem) {
-    existingItem.quantity += 1;
+const cartCount = ref(0);
+
+const fetchCartCount = async () => {
+  if (isAuthenticated.value) {
+    try {
+      const response = await cartService.getUserCart();
+      if (response.data.status) {
+        cartCount.value = response.data.data.total_items;
+      }
+    } catch (error) {
+      console.error('Error fetching cart count:', error);
+    }
   } else {
-    cart.value.push({
-      ...product,
-      quantity: 1
-    });
+    // Ambil dari localStorage
+    try {
+      const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      cartCount.value = localCart.reduce((total, item) => total + item.quantity, 0);
+    } catch (e) {
+      cartCount.value = 0;
+    }
   }
-  
-  // Save cart to localStorage
-  localStorage.setItem('cart', JSON.stringify(cart.value));
-  
-  showToast(`${product.name} added to cart`, 'success');
+};
+
+const addToCart = async (product) => {
+  try {
+    if (isAuthenticated.value) {
+      // Tambahkan ke cart server
+      await cartService.addToCart(product.id, 1);
+      showToast(`${product.name} added to cart`, 'success');
+      // Update cart count langsung setelah berhasil menambahkan
+      await fetchCartCount();
+    } else {
+      // Tambahkan ke localStorage cart
+      const existingItem = cart.value.find(item => item.id === product.id);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.value.push({
+          ...product,
+          quantity: 1
+        });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart.value));
+      showToast(`${product.name} added to cart`, 'success');
+      // Update cart count langsung untuk localStorage
+      cartCount.value = cart.value.reduce((total, item) => total + item.quantity, 0);
+    }
+  } catch (error) {
+    showToast('Error adding product to cart', 'error');
+    console.error('Error adding to cart:', error);
+  }
 };
 
 const filteredProducts = computed(() => {
@@ -126,8 +165,27 @@ const filteredProducts = computed(() => {
   );
 });
 
-const cartItemCount = computed(() => {
-  return cart.value.reduce((total, item) => total + item.quantity, 0);
+watch(isAuthenticated, () => {
+  fetchCartCount();
+}, { immediate: true });
+
+// Watch cart for changes and update cartCount
+watch(cart, () => {
+  if (!isAuthenticated.value) {
+    cartCount.value = cart.value.reduce((total, item) => total + item.quantity, 0);
+  }
+}, { deep: true });
+
+onMounted(() => {
+  fetchCartCount();
+  
+  // Set interval untuk update jumlah cart secara periodik
+  const interval = setInterval(fetchCartCount, 30000); // Setiap 30 detik
+  
+  // Clear interval ketika komponen di-unmount
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
 });
 
 onMounted(() => {
@@ -177,10 +235,10 @@ onMounted(() => {
             >
               <ShoppingCartIcon class="w-5 h-5" />
               <span 
-                v-if="cartItemCount > 0" 
+                v-if="cartCount > 0" 
                 class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
               >
-                {{ cartItemCount }}
+                {{ cartCount }}
               </span>
             </Button>
           </div>
